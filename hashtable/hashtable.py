@@ -91,10 +91,6 @@ class HashTable:
 
         Implement this.
         """
-        # h = my_hash("Hello")
-        # i = h % len(hash_table)
-        # hash_table[i] = "Some hello value"
-
         index = self.hash_index(key)
         self.storage[index] = value
 
@@ -115,6 +111,11 @@ class HashTable:
 
         Implement this.
         """
+        if not key:
+            return None
+
+        index = self.hash_index(key)
+        return self.storage[index]
 
     def resize(self):
         """
