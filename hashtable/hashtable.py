@@ -17,6 +17,9 @@ class HashTable:
     Implement this.
     """
 
+    def __init__(self, capacity):
+        self.capacity = 0
+
     """
     The core of the FNV-1 hash algorithm is as follows:
         hash = offset_basis
@@ -65,6 +68,10 @@ class HashTable:
 
         Implement this, and/or FNV-1.
         """
+        hash = 5381
+        for character in key:
+            hashed = ((hash << 5) + character) + character
+        return hashed
 
     def hash_index(self, key):
         """
