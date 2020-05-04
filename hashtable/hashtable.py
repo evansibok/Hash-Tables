@@ -59,7 +59,7 @@ class HashTable:
     for (each character)
         hash = (hash * 33) + (the character); 
         // or 
-        // hash = (((hash << 5) + (the character)) + (the character))
+        // hash = (((hash << 5) + hash) + (unicode point of the character))
     hash_index = hash & ((some power of two) - 1);
     """
 
