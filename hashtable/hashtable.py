@@ -102,6 +102,8 @@ class HashTable:
 
         Implement this.
         """
+        index = self.hash_index(key)
+        self.storage[index] = None
 
     def get(self, key):
         """
@@ -125,8 +127,7 @@ class HashTable:
         Implement this.
         """
         # double capacity size
-        capacity = self.capacity * 2
-        self.storage = self.storage * capacity
+        self.storage = self.storage * 2
 
 
 if __name__ == "__main__":
