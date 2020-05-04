@@ -124,6 +124,9 @@ class HashTable:
 
         Implement this.
         """
+        # double capacity size
+        capacity = self.capacity * 2
+        self.storage = self.storage * capacity
 
 
 if __name__ == "__main__":
