@@ -18,7 +18,8 @@ class HashTable:
     """
 
     def __init__(self, capacity):
-        self.capacity = 0
+        self.capacity = capacity
+        self.storage = [None] * capacity
 
     """
     The core of the FNV-1 hash algorithm is as follows:
@@ -69,8 +70,9 @@ class HashTable:
         Implement this, and/or FNV-1.
         """
         hash = 5381
-        for character in key:
-            hashed = ((hash << 5) + character) + character
+        for c in key:
+            # get the unicode point of the character and hash
+            hashed = ((hash << 5) + hash) + ord(c)
         return hashed
 
     def hash_index(self, key):
@@ -89,6 +91,12 @@ class HashTable:
 
         Implement this.
         """
+        # h = my_hash("Hello")
+        # i = h % len(hash_table)
+        # hash_table[i] = "Some hello value"
+
+        index = self.hash_index(key)
+        self.storage[index] = value
 
     def delete(self, key):
         """
