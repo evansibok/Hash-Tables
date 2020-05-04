@@ -17,12 +17,47 @@ class HashTable:
     Implement this.
     """
 
+    """
+    The core of the FNV-1 hash algorithm is as follows:
+        hash = offset_basis
+        for each octet_of_data to be hashed
+            hash = hash * FNV_prime
+            hash = hash xor octet_of_data
+        return hash
+    -----------------------------------------------------------
+    hash: n bit unsigned integer, where n is bit length of hash
+
+    The multiplication is performed modulo 2^n where n is bit length of hash
+
+    The xor is performed on the low order octect (8 bits) of hash
+
+    The FNV_prime is dependent on n, the size of the hash:
+        32 bit FNV_prime = 224 + 28 + 0x93 = 16777619
+        64 bit FNV_prime = 240 + 28 + 0xb3 = 1099511628211
+    Part of the magic of FNV is the selection of the FNV_prime for a given sized unsigned integer. Some primes do hash better than other primes for a given integer size.
+
+    The offset_bases for FNV-1 is dependent on n, the size of the hash:
+        32 bit offset_basis = 2166136261
+        64 bit offset_basis = 14695981039346656037
+    """
+
     def fnv1(self, key):
         """
         FNV-1 64-bit hash function
 
         Implement this, and/or DJB2.
         """
+
+    """
+    DJB2 Algorithm
+
+    hash = 0;
+    for (each character)
+        hash = (hash * 33) + (the character); 
+        // or 
+        // hash = (((hash << 5) + (the character)) + (the character))
+    hash_index = hash & ((some power of two) - 1);
+    """
 
     def djb2(self, key):
         """
@@ -36,7 +71,7 @@ class HashTable:
         Take an arbitrary key and return a valid integer index
         between within the storage capacity of the hash table.
         """
-        #return self.fnv1(key) % self.capacity
+        # return self.fnv1(key) % self.capacity
         return self.djb2(key) % self.capacity
 
     def put(self, key, value):
@@ -73,6 +108,7 @@ class HashTable:
 
         Implement this.
         """
+
 
 if __name__ == "__main__":
     ht = HashTable(2)
