@@ -93,22 +93,31 @@ class HashTable:
 
         Implement this.
         """
-        index = self.hash_index(key)
+        # WITHOUT COLLISION
+        # index = self.hash_index(key)
         # self.storage[index] = value
 
+        # WITH COLLISION
+        index = self.hash_index(key)
         # if storage index is empty
-        if self.storage[index] is None:
+        if not self.storage[index]:
             #   -> add a node to the storage index
             node = HashTableEntry(key, value)
             self.storage[index] = node
+
         # if storage index is not empty
-        else:
-            #   -> move through the list while cur.next is not empty
+        while self.storage[index].next:
             cur_node = self.storage[index]
-            while cur_node.next is not None:
+            if cur_node.next is not None:
                 cur_node = cur_node.next
-        #       -> if the cur.next is None, add the value to the cur.next
             cur_node.next = value
+        # else:
+        #     #   -> move through the list while cur.next is not empty
+        #     cur_node = self.storage[index]
+        #     while cur_node.next is not None:
+        #         cur_node = cur_node.next
+        # #       -> if the cur.next is None, add the value to the cur.next
+        #     cur_node.next = value
 
     def delete(self, key):
         """
@@ -129,26 +138,26 @@ class HashTable:
 
         Implement this.
         """
-        if not key:
+        # WITHOUT COLLISION
+        # if not key:
+        #     return None
+        # index = self.hash_index(key)
+        # return self.storage[index]
+
+        # WITH COLLISION
+        # hash the key to get an index
+        index = self.hash_index(key)
+
+        # # reference the index in ?the storage
+        # cur_node = self.storage[index]
+
+        # that storage index should be a node that's been set in the put
+        # each node should have a key and a value
+        # if the storage index is empty return None
+        if not self.storage[index]:
             return None
 
-        index = self.hash_index(key)
-        return self.storage[index]
-
-        # cur_node = self.storage[index]
-        # # if node doesn't exist
-        # if not cur_node:
-        #     return None
-        # #   -> return None
-        # # otherwise
-        # else:
-        #     # while the current node's key is not equal to key
-        #     while cur_node.key != key:
-        #         #   -> move through the list
-        #         cur_node = cur_node.next
-        #     # if the current node's key is equal to the key
-        #         # -> return the value
-        #     return cur_node.value
+        #
 
     def resize(self):
         """
