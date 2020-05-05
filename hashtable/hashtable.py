@@ -4,8 +4,8 @@ class HashTableEntry:
     """
 
     def __init__(self, key, value):
-        self.key = key
-        self.value = value
+        self.key = key  # self.head = self.key
+        self.value = value  # value = self.value
         self.next = None
 
 
@@ -72,7 +72,9 @@ class HashTable:
         hash = 5381
         for c in key:
             # get the unicode point of the character and hash
-            hashed = ((hash << 5) + hash) + ord(c)
+            hash = ((hash << 5) + hash) + ord(c)
+            # Make sure number is positive and clamp
+            hashed = hash & 0x7fffffff
         return hashed
 
     def hash_index(self, key):
@@ -92,7 +94,21 @@ class HashTable:
         Implement this.
         """
         index = self.hash_index(key)
-        self.storage[index] = value
+        # self.storage[index] = value
+
+        # if storage index is empty
+        if self.storage[index] is None:
+            #   -> add a node to the storage index
+            node = HashTableEntry(key, value)
+            self.storage[index] = node
+        # if storage index is not empty
+        else:
+            #   -> move through the list while cur.next is not empty
+            cur_node = self.storage[index]
+            while cur_node.next is not None:
+                cur_node = cur_node.next
+        #       -> if the cur.next is None, add the value to the cur.next
+            cur_node.next = value
 
     def delete(self, key):
         """
@@ -118,6 +134,21 @@ class HashTable:
 
         index = self.hash_index(key)
         return self.storage[index]
+
+        # cur_node = self.storage[index]
+        # # if node doesn't exist
+        # if not cur_node:
+        #     return None
+        # #   -> return None
+        # # otherwise
+        # else:
+        #     # while the current node's key is not equal to key
+        #     while cur_node.key != key:
+        #         #   -> move through the list
+        #         cur_node = cur_node.next
+        #     # if the current node's key is equal to the key
+        #         # -> return the value
+        #     return cur_node.value
 
     def resize(self):
         """
