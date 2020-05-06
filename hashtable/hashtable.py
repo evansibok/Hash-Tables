@@ -72,9 +72,9 @@ class HashTable:
         hash = 5381
         for c in key:
             # get the unicode point of the character and hash
-            hash = ((hash << 5) + hash) + ord(c)
+            hashed = ((hash << 5) + hash) + ord(c)
             # Make sure number is positive and clamp
-            hashed = hash & 0x7fffffff
+            # hashed = hash & 0x7fffffff
         return hashed
 
     def hash_index(self, key):
@@ -99,25 +99,29 @@ class HashTable:
 
         # WITH COLLISION
         index = self.hash_index(key)
-        # if storage index is empty
+        node = HashTableEntry(key, value)
+
+        # If storage index is empty
         if not self.storage[index]:
-            #   -> add a node to the storage index
-            node = HashTableEntry(key, value)
+            # Attach a node to the index
             self.storage[index] = node
 
-        # if storage index is not empty
-        while self.storage[index].next:
+        # If index is not empty
+        else:
+            # set it as current node
             cur_node = self.storage[index]
-            if cur_node.next is not None:
-                cur_node = cur_node.next
-            cur_node.next = value
-        # else:
-        #     #   -> move through the list while cur.next is not empty
-        #     cur_node = self.storage[index]
-        #     while cur_node.next is not None:
-        #         cur_node = cur_node.next
-        # #       -> if the cur.next is None, add the value to the cur.next
-        #     cur_node.next = value
+        # move through the node while index isn't empty
+            while cur_node:
+                # compare the key
+                # if the current node's key is same as input key
+                if cur_node.key == key:
+                    # replace the current node's value with the new value
+                    cur_node.value = value
+                    break
+                if cur_node.next:
+                    cur_node = cur_node.next
+                else:
+                    cur_node.next = node
 
     def delete(self, key):
         """
@@ -148,16 +152,23 @@ class HashTable:
         # hash the key to get an index
         index = self.hash_index(key)
 
-        # # reference the index in ?the storage
-        # cur_node = self.storage[index]
-
-        # that storage index should be a node that's been set in the put
-        # each node should have a key and a value
-        # if the storage index is empty return None
+        # if storage index doesn't exist
         if not self.storage[index]:
+            # return None
             return None
 
-        #
+        # if it exists
+        cur_node = self.storage[index]
+        # while current node's next is not None
+        while True:
+            # if current node's key is same as key
+            if cur_node.key == key:
+                # return current node's value
+                return cur_node.value
+            elif cur_node.next != None:
+                cur_node = cur_node.next
+            else:
+                return f"{key} not found!"
 
     def resize(self):
         """
@@ -176,6 +187,8 @@ if __name__ == "__main__":
     ht.put("line_1", "Tiny hash table")
     ht.put("line_2", "Filled beyond capacity")
     ht.put("line_3", "Linked list saves the day!")
+
+    print('storage', ht.storage[0].next.value)
 
     print("")
 
