@@ -4,8 +4,8 @@ class HashTableEntry:
     """
 
     def __init__(self, key, value):
-        self.key = key
-        self.value = value
+        self.key = key  # self.head = self.key
+        self.value = value  # value = self.value
         self.next = None
 
     def __repr__(self):
@@ -34,6 +34,17 @@ class HashTable:
         Implement this, and/or DJB2.
         """
         pass
+
+    """
+    DJB2 Algorithm
+
+    hash = 0;
+    for (each character)
+        hash = (hash * 33) + (the character); 
+        // or 
+        // hash = (((hash << 5) + hash) + (unicode point of the character))
+    hash_index = hash & ((some power of two) - 1);
+    """
 
     def djb2(self, key):
         """
