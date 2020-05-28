@@ -17,26 +17,45 @@ class HashTable:
     Implement this.
     """
 
+    def __init__(self, capacity):
+        self.capacity = capacity
+        self.storage = [None] * capacity  # Storage bucket
+
+    def __repr__(self):
+        return f"capacity: {self.capacity}, storage: {self.storage}"
+
     def fnv1(self, key):
         """
         FNV-1 64-bit hash function
 
         Implement this, and/or DJB2.
         """
+        pass
 
     def djb2(self, key):
         """
         DJB2 32-bit hash function
 
         Implement this, and/or FNV-1.
+
+        *** DJB2 Algorithm ***
+        hash = 5381
+        for character in string/key:
+            hashed = ((hash << 5) + ord(character))
+            return hashed
         """
+        hash = 5381
+        for c in key:
+            hash = ((hash << 5) + hash) + ord(c)
+            clamp = hash & 0x7F
+            return clamp
 
     def hash_index(self, key):
         """
         Take an arbitrary key and return a valid integer index
         between within the storage capacity of the hash table.
         """
-        #return self.fnv1(key) % self.capacity
+        # return self.fnv1(key) % self.capacity
         return self.djb2(key) % self.capacity
 
     def put(self, key, value):
@@ -47,6 +66,9 @@ class HashTable:
 
         Implement this.
         """
+        # WITHOUT COLLISION
+        index = self.hash_index(key)
+        self.storage[index] = value
 
     def delete(self, key):
         """
@@ -56,6 +78,9 @@ class HashTable:
 
         Implement this.
         """
+        # WITHOUT COLLISION
+        index = self.hash_index(key)
+        self.storage[index] = None
 
     def get(self, key):
         """
@@ -65,6 +90,12 @@ class HashTable:
 
         Implement this.
         """
+        # WITHOUT COLLISION
+        if not key:
+            return
+        else:
+            index = self.hash_index(key)
+            return self.storage[index]
 
     def resize(self):
         """
@@ -73,6 +104,32 @@ class HashTable:
 
         Implement this.
         """
+        pass
+
+
+ht = HashTable(2)
+
+ht.put("safari", "this is safari")
+hi = ht.hash_index("safari")
+get = ht.get("safari")
+print('saf i', hi)
+print('saf get', get)
+print("")
+
+ht.put("chrome", "this is chrome")
+hi = ht.hash_index("chrome")
+ht.delete("chrome")
+get = ht.get("chrome")
+print('che i', hi)
+print('che get', get)
+print("")
+
+ht.put("firefox", "this is firefox")
+hi = ht.hash_index("firefox")
+get = ht.get("firefox")
+print('fox i', hi)
+print('fox get', get)
+print("")
 
 if __name__ == "__main__":
     ht = HashTable(2)
