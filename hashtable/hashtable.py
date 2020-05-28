@@ -35,17 +35,6 @@ class HashTable:
         """
         pass
 
-    """
-    DJB2 Algorithm
-
-    hash = 0;
-    for (each character)
-        hash = (hash * 33) + (the character); 
-        // or 
-        // hash = (((hash << 5) + hash) + (unicode point of the character))
-    hash_index = hash & ((some power of two) - 1);
-    """
-
     def djb2(self, key):
         """
         DJB2 32-bit hash function
@@ -130,7 +119,37 @@ class HashTable:
         # else:
         #     index = self.hash_index(key)
         #     self.storage[index] = None
-        pass
+
+        # WITH COLLISION
+        index = self.hash_index(key)
+
+        # Handle when the index is empty
+        # if storage index is empty:
+        if not self.storage[index]:
+            # -> Return None
+            return None
+        # if the index is not empty
+        else:
+            # get the current node
+            cur_node = self.storage[index]
+            prev = None
+            next = cur_node.next
+            # while the current node's next is not empty
+            while cur_node:
+                # Handle when the key matches
+                if cur_node.key == key:
+                    if not prev:
+                        self.storage[index] = next
+                        return
+                    elif not next and prev:
+                        prev.next = None
+                        return
+                elif cur_node.next:
+                    prev = cur_node
+                    cur_node = next
+                    next = cur_node.next
+                else:
+                    print(f"{key} not found!")
 
     def get(self, key):
         """
