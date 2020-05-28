@@ -41,14 +41,17 @@ class HashTable:
         *** DJB2 Algorithm ***
         hash = 5381
         for character in string/key:
-            hashed = ((hash << 5) + ord(character))
+            hashed = (hash * 33) + ord(character)
+            or
+            // Optimized version of the one above
+            hashed = ((hash << 5) + hash) + ord(character)
             return hashed
         """
         hash = 5381
         for c in key:
             hash = ((hash << 5) + hash) + ord(c)
-            clamp = hash & 0x7F
-            return clamp
+            # hash &= 0x7F
+            return hash
 
     def hash_index(self, key):
         """
@@ -68,6 +71,9 @@ class HashTable:
         """
         # WITHOUT COLLISION
         index = self.hash_index(key)
+        if self.storage[index] != None:
+            print(
+                f"Collision! Overwriting from '{self.storage[index]}' to '{value}'")
         self.storage[index] = value
 
     def delete(self, key):
@@ -92,7 +98,7 @@ class HashTable:
         """
         # WITHOUT COLLISION
         if not key:
-            return
+            return None
         else:
             index = self.hash_index(key)
             return self.storage[index]
@@ -107,43 +113,34 @@ class HashTable:
         pass
 
 
-ht = HashTable(2)
-
-ht.put("safari", "this is safari")
-hi = ht.hash_index("safari")
-get = ht.get("safari")
-print('saf i', hi)
-print('saf get', get)
-print("")
-
-ht.put("chrome", "this is chrome")
-hi = ht.hash_index("chrome")
-ht.delete("chrome")
-get = ht.get("chrome")
-print('che i', hi)
-print('che get', get)
-print("")
-
-ht.put("firefox", "this is firefox")
-hi = ht.hash_index("firefox")
-get = ht.get("firefox")
-print('fox i', hi)
-print('fox get', get)
-print("")
-
 if __name__ == "__main__":
     ht = HashTable(2)
 
-    ht.put("line_1", "Tiny hash table")
-    ht.put("line_2", "Filled beyond capacity")
-    ht.put("line_3", "Linked list saves the day!")
+    ht.put("firefox", "this is firefox")
+    hi = ht.hash_index("firefox")
+    print("fox djb2", ht.djb2("firefox"))
+    print('fox i', hi)
+    print("")
 
+    ht.put("edge", "this is edge")
+    hi = ht.hash_index("edge")
+    print("edge djb2", ht.djb2("edge"))
+    print('edge i', hi)
+    print("")
+
+    ht.put("brave", "this is brave")
+    hi = ht.hash_index("brave")
+    print("brave djb2", ht.djb2("brave"))
+    print('brave i', hi)
+    print("")
+
+    print('ht', ht)
     print("")
 
     # Test storing beyond capacity
-    print(ht.get("line_1"))
-    print(ht.get("line_2"))
-    print(ht.get("line_3"))
+    print('fox get', ht.get("firefox"))
+    print('edge get', ht.get("edge"))
+    print('brave', ht.get("brave"))
 
     # Test resizing
     old_capacity = len(ht.storage)
@@ -153,8 +150,8 @@ if __name__ == "__main__":
     print(f"\nResized from {old_capacity} to {new_capacity}.\n")
 
     # Test if data intact after resizing
-    print(ht.get("line_1"))
-    print(ht.get("line_2"))
-    print(ht.get("line_3"))
+    print('fox get', ht.get("firefox"))
+    print('edge get', ht.get("edge"))
+    print('brave', ht.get("brave"))
 
     print("")
